@@ -524,8 +524,8 @@ SELECT FoodTruck.foodTruckName, FoodTruck.stationName, capacity, COUNT(DISTINCT 
     ON FOODTRUCK.foodTruckName = MENUITEM.foodTruckName
     WHERE
     (i_managerUsername = managerUsername) AND
-    (i_foodTruckName = "" OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') ) AND
-    (i_stationName = FoodTruck.stationName OR i_stationName = "") AND
+    (i_foodTruckName = "" OR i_foodTruckName IS NULL OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') ) AND
+    (i_stationName = FoodTruck.stationName OR i_stationName = "" OR i_stationName IS NULL) AND
     ((i_hasRemainingCapacity = TRUE AND capacity>0) OR (i_hasRemainingCapacity = FALSE))
     GROUP BY FoodTruck.foodTruckName
     HAVING
@@ -764,8 +764,8 @@ BEGIN
         FoodTruck ON OrderDetail.foodTruckName = FoodTruck.foodTruckName
         WHERE
         (i_managerUsername = FoodTruck.managerUsername) AND
-        (i_foodTruckName IS NULL OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') ) AND
-        (i_stationName IS NULL OR FoodTruck.stationName LIKE CONCAT('%', i_stationName, '%') ) AND
+        (i_foodTruckName IS NULL OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') OR i_foodTruckName = "" ) AND
+        (i_stationName IS NULL OR FoodTruck.stationName LIKE CONCAT('%', i_stationName, '%') OR i_stationName = "") AND
         (i_minDate IS NULL OR Orders.date >= i_minDate) AND (i_maxDate IS NULL OR Orders.date <= i_maxDate)
         GROUP BY FoodTruck.foodTruckName
     ) T
