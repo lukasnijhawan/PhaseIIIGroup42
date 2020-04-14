@@ -888,12 +888,12 @@ BEGIN
     DROP TABLE IF EXISTS cus_current_information_foodTruck_result;
     CREATE TABLE cus_current_information_foodTruck_result(foodTruckName varchar(100), managerName varchar(100), foodNames text);
 
-    Select FoodTruck.foodTruckName, managerUsername, foodName from Customer 
-    join Orders on Customer.username = Orders.customerUsername 
-    join OrderDetail on Orders.orderID = OrderDetail.orderID 
-    join FoodTruck on FoodTruck.foodTruckName = OrderDetail.foodTruckName
-    Where Customer.username = i_customerUsername;
-
+    Select FoodTruck.foodTruckName, managerUsername, GROUP_CONCAT(foodName) 
+    from customer
+    join FoodTruck on customer.stationName = FoodTruck.stationName
+    join MenuItem on menuItem.foodTruckName = foodTruck.foodTruckName
+    Where Customer.username = i_customerUsername
+    Group by FoodTruck.foodTruckName;
 END //
 DELIMITER ;
 
