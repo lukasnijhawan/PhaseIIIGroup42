@@ -560,6 +560,9 @@ BEGIN
         ) THEN
         INSERT INTO FoodTruck (foodTruckName, stationName, managerUsername)
         VALUES (i_foodTruckName, i_stationName, i_managerUsername);
+	UPDATE Station
+	SET capacity = capacity - 1
+	WHERE stationName = i_stationName;																    
     END IF;
 
 END //
@@ -672,6 +675,9 @@ BEGIN
         UPDATE FoodTruck
         SET stationName = i_stationName
         WHERE foodTruckName = i_foodTruckName;
+	UPDATE Station
+	SET capacity = capacity - 1
+	WHERE stationName = i_stationName;											      
     END IF;
 END //
 DELIMITER ;
