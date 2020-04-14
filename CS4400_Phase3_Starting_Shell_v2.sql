@@ -664,11 +664,15 @@ DROP PROCEDURE IF EXISTS mn_update_foodTruck_station;
 DELIMITER //
 CREATE PROCEDURE mn_update_foodTruck_station(IN i_foodTruckName VARCHAR(50), IN i_stationName VARCHAR(50))
 BEGIN
-
-    UPDATE FoodTruck
-    SET stationName = i_stationName
-    WHERE foodTruckName = i_foodTruckName;
-
+    IF i_stationName in (
+        SELECT stationName
+        FROM station
+        WHERE capacity > 0
+    ) THEN
+        UPDATE FoodTruck
+        SET stationName = i_stationName
+        WHERE foodTruckName = i_foodTruckName;
+    END IF;
 END //
 DELIMITER ;
 
@@ -678,7 +682,7 @@ DELIMITER //
 CREATE PROCEDURE mn_update_foodTruck_staff(IN i_foodTruckName VARCHAR(50), IN i_staffName VARCHAR(50))
 BEGIN
 
-    UPDATE STAFF
+    UPDATE Staff
     SET foodTruckName = i_foodTruckName
     WHERE staffName = i_staffName;
 
@@ -690,11 +694,19 @@ DROP PROCEDURE IF EXISTS mn_update_foodTruck_menu_item;
 DELIMITER //
 CREATE PROCEDURE mn_update_foodTruck_menu_item(IN i_foodTruckName VARCHAR(50), IN i_price DECIMAL(6,2), IN i_foodName VARCHAR(50))
 BEGIN
-
-    UPDATE MENU_ITEM
-    SET price = i_price
-    WHERE foodTruckName = i_foodTruckName AND foodName = i_foodName;
-
+    IF i_foodName IN (
+        SELECT foodName
+        FROM Food
+    ) AND
+    i_foodTruckName IN (
+        SELECT foodTruckName
+        FROM FoodTruck
+    )
+    THEN
+        UPDATE MenuItem
+        SET price = i_price
+        WHERE foodTruckName = i_foodTruckName AND foodName = i_foodName;
+    END IF;
 END //
 DELIMITER ;
 
@@ -711,7 +723,6 @@ BEGIN
     SELECT DISTINCT(stationName)
     FROM FoodTruck
     WHERE managerUsername = i_managerUsername;
-
 END //
 DELIMITER ;
 
