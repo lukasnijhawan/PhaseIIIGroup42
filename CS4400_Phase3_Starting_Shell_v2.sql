@@ -707,11 +707,15 @@ BEGIN
     i_foodTruckName IN (
         SELECT foodTruckName
         FROM FoodTruck
-    )
+    ) AND
+	i_foodName NOT IN (
+		SELECT foodName 
+		FROM MenuItem
+		WHERE foodTruckName = i_foodTruckName
+	)
     THEN
-        UPDATE MenuItem
-        SET price = i_price
-        WHERE foodTruckName = i_foodTruckName AND foodName = i_foodName;
+        INSERT INTO MenuItem(price, foodTruckName, foodName) 
+		VALUES (i_price,i_foodTruckName,i_foodName);
     END IF;
 END //
 DELIMITER ;
