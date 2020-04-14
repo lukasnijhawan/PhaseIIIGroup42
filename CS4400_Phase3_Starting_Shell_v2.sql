@@ -857,7 +857,15 @@ BEGIN
     CREATE TABLE cus_current_information_basic_result(stationName varchar(100), buildingName varchar(100), tags text, `description` text,
 		balance DECIMAL(6, 2));
 
-    -- place your code/solution here
+    Select Station.stationName, Station.buildingName, tag, balance
+    From Station
+    Join
+    Building on Station.buildingName = Building.buildingName
+    Join 
+    Customer on Customer.stationName = Station.stationName
+    Join 
+    BuildingTag on Building.buildingName = BuildingTag.buildingName
+    Where username = i_customerUsername;
 
 END //
 DELIMITER ;
@@ -870,7 +878,11 @@ BEGIN
     DROP TABLE IF EXISTS cus_current_information_foodTruck_result;
     CREATE TABLE cus_current_information_foodTruck_result(foodTruckName varchar(100), managerName varchar(100), foodNames text);
 
-    -- place your code/solution here
+    Select FoodTruck.foodTruckName, managerUsername, foodName from Customer 
+    join Orders on Customer.username = Orders.customerUsername 
+    join OrderDetail on Orders.orderID = OrderDetail.orderID 
+    join FoodTruck on FoodTruck.foodTruckName = OrderDetail.foodTruckName
+    Where Customer.username = i_customerUsername;
 
 END //
 DELIMITER ;
@@ -881,7 +893,8 @@ DELIMITER //
 CREATE PROCEDURE cus_order(IN i_date DATE, i_customerUsername VARCHAR(55))
 BEGIN
 
-    -- place your code/solution here
+    Insert into Orders(customerUsername, date) 
+    values (i_customerUsername, i_date);
 
 END //
 DELIMITER ;
