@@ -524,8 +524,8 @@ SELECT FoodTruck.foodTruckName, FoodTruck.stationName, capacity, COUNT(DISTINCT 
     ON FOODTRUCK.foodTruckName = MENUITEM.foodTruckName
     WHERE
     (i_managerUsername = managerUsername) AND
-    (i_foodTruckName IS NULL OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') ) AND
-    (i_stationName = FoodTruck.stationName OR i_stationName IS NULL) AND
+    (i_foodTruckName = "" OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') ) AND
+    (i_stationName = FoodTruck.stationName OR i_stationName = "") AND
     ((i_hasRemainingCapacity = TRUE AND capacity>0) OR (i_hasRemainingCapacity = FALSE))
     GROUP BY FoodTruck.foodTruckName
     HAVING
