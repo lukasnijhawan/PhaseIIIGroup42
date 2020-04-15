@@ -928,7 +928,8 @@ BEGIN
         SELECT balance
         FROM customer INNER JOIN orders ON customer.username = orders.customerusername
         WHERE orderID = i_orderID
-        )) THEN
+        ) AND
+       	i_purchaseQuantity > 0) THEN
 		INSERT INTO OrderDetail(orderID, foodTruckName, foodName, purchaseQuantity)
 		VALUES (i_orderID, i_foodTruckName, i_foodName, i_purchaseQuantity);
 
@@ -948,6 +949,7 @@ BEGIN
 
 
 
+END //
 END //
 DELIMITER ;
 
