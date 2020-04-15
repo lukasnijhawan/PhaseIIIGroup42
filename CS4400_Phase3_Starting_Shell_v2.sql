@@ -867,8 +867,8 @@ BEGIN
     DROP TABLE IF EXISTS cus_current_information_basic_result;
     CREATE TABLE cus_current_information_basic_result(stationName varchar(100), buildingName varchar(100), tags text, `description` text,
 		balance DECIMAL(6, 2));
-
-    Select Station.stationName, Station.buildingName, tag, balance
+    INSERT INTO cus_current_information_basic_result
+    Select Station.stationName, Station.buildingName, tag, description, balance
     From Station
     Join
     Building on Station.buildingName = Building.buildingName
@@ -888,7 +888,7 @@ CREATE PROCEDURE cus_current_information_foodTruck(IN i_customerUsername VARCHAR
 BEGIN
     DROP TABLE IF EXISTS cus_current_information_foodTruck_result;
     CREATE TABLE cus_current_information_foodTruck_result(foodTruckName varchar(100), managerName varchar(100), foodNames text);
-
+    INSERT INTO cus_current_information_foodTruck_result
     Select FoodTruck.foodTruckName, managerUsername, GROUP_CONCAT(foodName) 
     from customer
     join FoodTruck on customer.stationName = FoodTruck.stationName
