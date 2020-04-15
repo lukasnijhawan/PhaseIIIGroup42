@@ -939,7 +939,7 @@ BEGIN
 			WHERE foodTruckName = i_foodTruckName AND
 			foodName = i_foodName))
 		WHERE customer.username = (
-			SELECT username
+			SELECT customerusername
 			FROM  orders
 			WHERE orderID = i_orderID
         );
