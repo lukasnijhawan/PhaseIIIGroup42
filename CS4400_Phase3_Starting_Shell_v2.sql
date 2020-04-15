@@ -268,20 +268,19 @@ BEGIN
 		buildingName varchar(100), tags text,
         stationName varchar(100), capacity int, foodTruckNames text
 	);
-
+    
 	INSERT INTO ad_filter_building_station_result
-    SELECT * FROM
+    SELECT * FROM 
 		(SELECT buildingInfo.buildingName, tags, stationInfo.stationName, stationInfo.capacity, foodTruckNames FROM
-			(SELECT B.buildingName, GROUP_CONCAT(BT.tag) as "tags" FROM Building as B LEFT JOIN BuildingTag as BT on B.buildingName = BT.buildingName GROUP BY B.buildingName) as buildingInfo LEFT JOIN
+			(SELECT B.buildingName, GROUP_CONCAT(BT.tag) as "tags" FROM Building as B LEFT JOIN BuildingTag as BT on B.buildingName = BT.buildingName WHERE (i_buildingTag is NULL OR i_buildingTag = "" OR BT.tag LIKE CONCAT('%', i_buildingTag, '%')) GROUP BY B.buildingName) as buildingInfo LEFT JOIN
 			(SELECT S.stationName, S.capacity, S.buildingName, GROUP_CONCAT(F.foodTruckName) as "foodTruckNames" FROM Station as S LEFT JOIN FoodTruck as F on S.stationName = F.stationName GROUP BY S.stationName) as stationInfo
 		ON buildingInfo.buildingName = stationInfo.buildingName
 		GROUP BY buildingInfo.buildingName) as innerTable
 	WHERE (i_buildingName is NULL OR i_buildingName = "" OR buildingName = i_buildingName)
-    AND (i_buildingTag is NULL OR i_buildingTag = "" OR tags LIKE CONCAT('%', i_buildingTag, '%'))
     AND (i_stationName is NULL OR i_stationName = "" OR stationName = i_stationName)
     AND (i_minCapacity is NULL OR capacity >= i_minCapacity)
     AND (i_maxCapacity is NULL OR capacity <= i_maxCapacity);
-
+    
 END //
 DELIMITER ;
 
@@ -458,21 +457,23 @@ BEGIN
     CREATE TABLE ad_filter_food_result(foodName varchar(100), menuCount int, purchaseCount int);
 
 	INSERT INTO ad_filter_food_result
-    SELECT foodName, count(foodName) as menuCount, sum(purchaseQuantity) as purchaseCount
-    FROM orderdetail
-    WHERE i_foodName IS NULL OR foodName = i_foodName
-    GROUP BY foodName
+	SELECT * FROM
+		(SELECT MenuCounts.foodName, MenuCounts.menuCount, COALESCE(SUM(OrderDetail.purchaseQuantity), 0) AS purchaseCount FROM 
+			(SELECT Food.foodName, count(MenuItem.foodTruckName) AS menuCount FROM Food LEFT JOIN MenuItem ON Food.foodName = MenuItem.foodName GROUP BY foodName) AS MenuCounts
+		LEFT JOIN OrderDetail 
+		ON MenuCounts.foodName = OrderDetail.foodName
+		GROUP BY MenuCounts.foodName) as innerTable
+    WHERE (i_foodName = '' OR i_foodName is NULL OR foodName = i_foodName)
     ORDER BY
-        CASE WHEN (i_sortedBy = "name" AND (i_sortDirection = "ASC" OR i_sortDirection IS NULL)) THEN foodName END ASC,
+        CASE WHEN (i_sortedBy = "name" AND (i_sortDirection = "ASC" OR i_sortDirection = NULL)) THEN foodName END ASC,
         CASE WHEN i_sortedBy = "name" AND i_sortDirection = "DESC" THEN foodName END DESC,
-		CASE WHEN i_sortedBy = "menuCount" AND (i_sortDirection = "ASC" OR i_sortDirection IS NULL) THEN menuCount END ASC,
+		CASE WHEN i_sortedBy = "menuCount" AND (i_sortDirection = "ASC" OR i_sortDirection = NULL) THEN menuCount END ASC,
 		CASE WHEN i_sortedBy = "menuCount" AND i_sortDirection = "DESC" THEN menuCount END DESC,
-		CASE WHEN i_sortedBy = "purchaseCount" AND (i_sortDirection = "ASC" OR i_sortDirection IS NULL) THEN purchaseCount END ASC,
+		CASE WHEN i_sortedBy = "purchaseCount" AND (i_sortDirection = "ASC" OR i_sortDirection = NULL) THEN purchaseCount END ASC,
 		CASE WHEN i_sortedBy = "purchaseCount" AND i_sortDirection = "DESC" THEN purchaseCount END DESC;
-
+        
 END //
 DELIMITER ;
-
 -- Query #15: ad_delete_food [Screen #9 Admin Manage Food]
 DROP PROCEDURE IF EXISTS ad_delete_food;
 DELIMITER //
