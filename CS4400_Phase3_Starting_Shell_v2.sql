@@ -200,6 +200,34 @@ DELIMITER ;
 -- Don't need to check email format (XXX@XXX.XXX)
 -- Make sure you check balance > 0 for customer
 -- Make sure you check password length >= 8
+--Begin (Proposed new code for Query 2)
+--	IF i_email is not NULL and i_type is not NULL Then
+--		IF length(i_password) >= 8 THEN
+--			INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
+--			INSERT INTO Employee VALUES (i_username, i_email);
+--			IF i_balance > 0 THEN
+--				INSERT INTO Customer VALUES (i_username, i_balance, NULL);
+--			END IF;
+--            IF i_type = 'Admin' THEN
+--				INSERT INTO Admin VALUES (i_username);
+--			END IF;
+  --          IF i_type = 'Manager' THEN
+	--			INSERT INTO Manager VALUES (i_username);
+	--		END IF;
+          --  IF i_type = 'Staff' THEN
+		--		INSERT INTO Staff VALUES (i_username, NULL);
+-- 			END IF;
+-- 		END IF;
+-- 	ELSEIF i_balance is not NULL and i_balance > 0 Then
+-- 		IF length(i_password) >= 8 and i_type is Null and i_email is Null THEN
+-- 			INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
+--             INSERT INTO Customer VALUES (i_username, i_balance, NULL);
+-- 		END IF;
+-- 	End IF;
+-- 
+
+-- END //
+-- DELIMITER ;								 
 DROP PROCEDURE IF EXISTS register;
 DELIMITER //
 CREATE PROCEDURE register(
