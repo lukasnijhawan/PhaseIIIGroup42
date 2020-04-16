@@ -995,7 +995,7 @@ BEGIN
 
     -- place your code/solution here
 
-    INSERT INTO cus_order_history
+    INSERT INTO cus_order_history_result
 
     SELECT date,
     orderID,
