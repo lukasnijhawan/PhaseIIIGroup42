@@ -868,8 +868,8 @@ BEGIN
         INNER JOIN
         BuildingTag ON Station.buildingName  = BuildingTag.buildingName
         WHERE
-        (i_buildingName is NULL OR i_buildingName = Station.buildingName) AND
-        (i_stationName is NULL OR i_stationName = Station.stationName) AND
+        (i_buildingName is NULL OR i_buildingName = Station.buildingName OR i_buildingName = '') AND
+        (i_stationName is NULL OR i_stationName = Station.stationName OR i_stationName = '') AND
         (i_buildingTag is NULL OR BuildingTag.tag LIKE CONCAT('%', i_buildingTag, '%') OR i_buildingTag = '') AND
         (i_foodTruckName is NULL OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') OR i_foodTruckName = '') AND
         (i_foodName is NULL OR MenuItem.foodName LIKE CONCAT('%', i_foodName, '%') OR i_foodName = '')
