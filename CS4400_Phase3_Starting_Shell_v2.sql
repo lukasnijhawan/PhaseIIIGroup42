@@ -693,7 +693,7 @@ BEGIN
 
     UPDATE Staff
     SET foodTruckName = i_foodTruckName
-    WHERE staffName = i_staffName;
+    WHERE staff.userName = i_staffName;
 
 END //
 DELIMITER ;
