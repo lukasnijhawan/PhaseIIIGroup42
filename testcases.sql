@@ -116,8 +116,38 @@ SELECT * FROM mn_get_station_result;
 
 CALL mn_get_station(NULL);
 SELECT * FROM mn_get_station_result;
--- Query #24
 
+-- Query #24
+CALL mn_filter_summary(
+    'Manager1',
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'totalRevenue',
+    'ASC');
+ SELECT * FROM mn_filter_summary_result;
+ 
+ CALL mn_filter_summary(
+    'Manager1',
+    'CrazyPies',
+    'Campanile',
+    NULL,
+    NULL,
+    NULL,
+    NULL);
+ SELECT * FROM mn_filter_summary_result;
+ 
+ CALL mn_filter_summary(
+    'Manager2',
+    NULL,
+    'C',
+    NULL,
+    NULL,
+    NULL,
+    NULL);
+ SELECT * FROM mn_filter_summary_result;
+ 
 
 
 -- Query #25
