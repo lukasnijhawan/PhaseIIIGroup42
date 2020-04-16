@@ -200,36 +200,6 @@ DELIMITER ;
 -- Don't need to check email format (XXX@XXX.XXX)
 -- Make sure you check balance > 0 for customer
 -- Make sure you check password length >= 8
--- Begin (Proposed new code for Query 2)
---	IF i_email is not NULL OR i_balance is not NULL Then
-	--	IF i_email is not NULL and i_type is not NULL Then
-	--		IF length(i_password) >= 8 THEN
-	--			INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
-	--			INSERT INTO Employee VALUES (i_username, i_email);
-	--			IF i_balance > 0 THEN
-	--				INSERT INTO Customer VALUES (i_username, i_balance, NULL);
-	--			END IF;
-	--            IF i_type = 'Admin' THEN
-	--				INSERT INTO Admin VALUES (i_username);
-	--			END IF;
-	  --          IF i_type = 'Manager' THEN
-		--			INSERT INTO Manager VALUES (i_username);
-		--		END IF;
-			  --  IF i_type = 'Staff' THEN
-			--		INSERT INTO Staff VALUES (i_username, NULL);
---		END IF;
--- 			END IF;
--- 		END IF;
--- 	ELSEIF i_balance is not NULL and i_balance > 0 Then
--- 		IF length(i_password) >= 8 and i_type is Null and i_email is Null THEN
--- 			INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
---             INSERT INTO Customer VALUES (i_username, i_balance, NULL);
--- 		END IF;
--- 	End IF;
--- 
-
--- END //
--- DELIMITER ;								 
 DROP PROCEDURE IF EXISTS register;
 DELIMITER //
 CREATE PROCEDURE register(
@@ -241,47 +211,87 @@ CREATE PROCEDURE register(
                 IN i_balance DECIMAL(6,2),
                 IN i_type ENUM('Admin', 'Manager', 'Staff'))
 BEGIN
-	IF length(i_password) >= 8
-    THEN
-	INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
-    END IF;
-
-    IF i_email IS NOT NULL
-    AND length(i_password) >= 8
-    THEN
-    INSERT INTO Employee VALUES (i_username, i_email);
-    END IF;
-
-    IF i_balance > 0
-    AND length(i_password) >= 8
-    THEN
-    INSERT INTO Customer VALUES (i_username, i_balance, NULL);
-    END IF;
-
-    IF i_type = 'Admin'
-    AND i_email IS NOT NULL
-    AND length(i_password) >= 8
-    THEN
-    INSERT INTO Admin VALUES (i_username);
-    END IF;
-
-	IF i_type = 'Manager'
-    AND i_email IS NOT NULL
-    AND length(i_password) >= 8
-    THEN
-    INSERT INTO Manager VALUES (i_username);
-    END IF;
-
-    IF i_type = 'Staff'
-    AND i_email IS NOT NULL
-    AND length(i_password) >= 8
-    THEN
-    INSERT INTO Staff VALUES (i_username, NULL);
-    END IF;
-
+IF i_email is not NULL and i_type is not NULL Then
+		IF length(i_password) >= 8
+        THEN
+			INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
+			INSERT INTO Employee VALUES (i_username, i_email);
+			IF i_balance > 0 THEN
+				INSERT INTO Customer VALUES (i_username, i_balance, NULL);
+			END IF;
+			IF i_type = 'Admin' THEN
+				INSERT INTO Admin VALUES (i_username);
+			END IF;
+			IF i_type = 'Manager' THEN
+				INSERT INTO Manager VALUES (i_username);
+			END IF;
+			IF i_type = 'Staff' THEN
+				INSERT INTO Staff VALUES (i_username, NULL);
+			END IF;
+		END IF;
+	ELSEIF i_balance is not NULL and i_balance > 0 Then
+		IF length(i_password) >= 8 and i_type is Null and i_email is Null
+        THEN 
+			INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
+			INSERT INTO Customer VALUES (i_username, i_balance, NULL);
+		END IF;
+	End IF;
 
 END //
 DELIMITER ;
+-- DROP PROCEDURE IF EXISTS register;
+-- DELIMITER //
+-- CREATE PROCEDURE register(
+-- 				IN i_username VARCHAR(50),
+-- 				IN i_email VARCHAR(50),
+--                 IN i_firstname VARCHAR(50),
+--                 IN i_lastname VARCHAR(50),
+--                 IN i_password VARCHAR(50),
+--                 IN i_balance DECIMAL(6,2),
+--                 IN i_type ENUM('Admin', 'Manager', 'Staff'))
+-- BEGIN
+-- 	IF length(i_password) >= 8
+--     THEN
+-- 	INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
+--     END IF;
+-- 
+--     IF i_email IS NOT NULL
+--     AND length(i_password) >= 8
+--     THEN
+--     INSERT INTO Employee VALUES (i_username, i_email);
+--     END IF;
+-- 
+--     IF i_balance > 0
+--     AND length(i_password) >= 8
+--     THEN
+--     INSERT INTO Customer VALUES (i_username, i_balance, NULL);
+--     END IF;
+-- 
+--     IF i_type = 'Admin'
+--     AND i_email IS NOT NULL
+--     AND length(i_password) >= 8
+--     THEN
+--     INSERT INTO Admin VALUES (i_username);
+--     END IF;
+
+-- 	IF i_type = 'Manager'
+--     AND i_email IS NOT NULL
+--     AND length(i_password) >= 8
+--     THEN
+--     INSERT INTO Manager VALUES (i_username);
+--     END IF;
+-- 
+--     IF i_type = 'Staff'
+--     AND i_email IS NOT NULL
+--     AND length(i_password) >= 8
+--     THEN
+--     INSERT INTO Staff VALUES (i_username, NULL);
+--     END IF;
+-- 
+-- 
+-- END //
+-- DELIMITER ;
+								
 
 -- Query #3: ad_filter_building_station [Screen #4 Admin Manage Building & Station]
 DROP PROCEDURE IF EXISTS ad_filter_building_station;
