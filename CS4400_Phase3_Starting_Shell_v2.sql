@@ -213,7 +213,7 @@ CREATE PROCEDURE register(
 BEGIN
 	IF length(i_password) >= 8
     THEN
-	INSERT INTO cs4400spring2020.`User`  VALUES (i_username, i_password,i_firstname, i_lastname);
+	INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
     END IF;
 
     IF i_email IS NOT NULL
