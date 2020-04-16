@@ -200,7 +200,7 @@ DELIMITER ;
 -- Don't need to check email format (XXX@XXX.XXX)
 -- Make sure you check balance > 0 for customer
 -- Make sure you check password length >= 8
---Begin (Proposed new code for Query 2)
+-- Begin (Proposed new code for Query 2)
 --	IF i_email is not NULL and i_type is not NULL Then
 --		IF length(i_password) >= 8 THEN
 --			INSERT INTO cs4400spring2020.`User`  VALUES (i_username, md5(i_password),i_firstname, i_lastname);
