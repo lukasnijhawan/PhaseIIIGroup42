@@ -617,7 +617,8 @@ DROP PROCEDURE IF EXISTS mn_view_foodTruck_available_staff;
 DELIMITER //
 CREATE PROCEDURE mn_view_foodTruck_available_staff(IN i_managerUsername VARCHAR(50), IN i_foodTruckName VARCHAR(50))
 BEGIN
-    CREATE TABLE mn_view_foodTruck_available_staff_result(availableStaff varchar(100))
+	DROP TABLE IF EXISTS mn_view_foodTruck_staff_result;
+    CREATE TABLE mn_view_foodTruck_available_staff_result(availableStaff varchar(100));
     INSERT INTO mn_view_foodTruck_available_staff_result									 
     SELECT CONCAT(firstName , ' ' , lastName)
     FROM STAFF INNER JOIN USER
@@ -952,7 +953,6 @@ BEGIN
 
 
 
-END //
 END //
 DELIMITER ;
 
