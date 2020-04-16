@@ -705,7 +705,10 @@ BEGIN
         SELECT stationName
         FROM station
         WHERE capacity > 0
-    ) THEN
+    ) AND i_foodTruckName in(
+	SELECT foodTruckName 
+	 FROM foodtruck
+	) THEN
         UPDATE FoodTruck
         SET stationName = i_stationName
         WHERE foodTruckName = i_foodTruckName;
