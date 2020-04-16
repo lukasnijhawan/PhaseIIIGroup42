@@ -900,7 +900,7 @@ BEGIN
     CREATE TABLE cus_current_information_basic_result(stationName varchar(100), buildingName varchar(100), tags text, `description` text,
 		balance DECIMAL(6, 2));
     INSERT INTO cus_current_information_basic_result
-    Select Station.stationName, Station.buildingName, tag, description, balance
+    Select Station.stationName, Station.buildingName, GROUP_CONCAT(tag), description, balance
     From Station
     Join
     Building on Station.buildingName = Building.buildingName
@@ -908,7 +908,8 @@ BEGIN
     Customer on Customer.stationName = Station.stationName
     Join 
     BuildingTag on Building.buildingName = BuildingTag.buildingName
-    Where username = i_customerUsername;
+    Where username = i_customerUsername
+  ;
 
 END //
 DELIMITER ;
