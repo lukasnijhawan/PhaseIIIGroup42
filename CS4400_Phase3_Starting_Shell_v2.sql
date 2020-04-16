@@ -924,10 +924,11 @@ BEGIN
     DROP TABLE IF EXISTS cus_current_information_foodTruck_result;
     CREATE TABLE cus_current_information_foodTruck_result(foodTruckName varchar(100), managerName varchar(100), foodNames text);
     INSERT INTO cus_current_information_foodTruck_result
-    Select FoodTruck.foodTruckName, managerUsername, GROUP_CONCAT(foodName) 
+    Select FoodTruck.foodTruckName, CONCAT(firstName , ' ' , lastName), GROUP_CONCAT(foodName) 
     from customer
     join FoodTruck on customer.stationName = FoodTruck.stationName
     join MenuItem on menuItem.foodTruckName = foodTruck.foodTruckName
+    join user on foodTruck.managerUsername = user.username									 
     Where Customer.username = i_customerUsername
     Group by FoodTruck.foodTruckName;
 END //
