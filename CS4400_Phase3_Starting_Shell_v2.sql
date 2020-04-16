@@ -555,7 +555,11 @@ BEGIN
      CREATE TABLE mn_filter_foodTruck_result(foodTruckName varchar(100), stationName varchar(100),
 		remainingCapacity int, staffCount int, menuItemCount int);
 INSERT INTO mn_filter_foodTruck_result
-SELECT FoodTruck.foodTruckName, FoodTruck.stationName, capacity, COUNT(DISTINCT username), COUNT(DISTINCT foodName)
+SELECT FoodTruck.foodTruckName, FoodTruck.stationName, capacity - (
+    SELECT count(foodtruckname)
+    FROM foodTruck
+    WHERE foodTruck.stationName = station.stationName),
+    COUNT(DISTINCT username), COUNT(DISTINCT foodName)
     FROM FOODTRUCK
     INNER JOIN STATION
     ON FOODTRUCK.stationName = STATION.stationName
@@ -567,7 +571,7 @@ SELECT FoodTruck.foodTruckName, FoodTruck.stationName, capacity, COUNT(DISTINCT 
     (i_managerUsername = managerUsername) AND
     (i_foodTruckName = "" OR i_foodTruckName IS NULL OR FoodTruck.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') ) AND
     (i_stationName = FoodTruck.stationName OR i_stationName IS NULL) AND
-    ((i_hasRemainingCapacity = TRUE AND capacity>0) OR (i_hasRemainingCapacity = FALSE))
+    ((i_hasRemainingCapacity = TRUE AND capacity - (SELECT count(foodTruckName) FROM FoodTruck WHERE foodTruck.StationName = station.stationName)>0) OR (i_hasRemainingCapacity = FALSE))
     GROUP BY FoodTruck.foodTruckName
     HAVING
     ((i_minStaffCount IS NULL AND i_maxStaffCount IS NULL) OR
