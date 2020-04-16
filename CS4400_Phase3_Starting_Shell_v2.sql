@@ -594,16 +594,27 @@ DELIMITER //
 CREATE PROCEDURE mn_create_foodTruck_add_station(IN i_foodTruckName VARCHAR(50), IN i_stationName VARCHAR(50), IN i_managerUsername VARCHAR(50))
 BEGIN
 
+DROP PROCEDURE IF EXISTS mn_create_foodTruck_add_station;
+DELIMITER //
+CREATE PROCEDURE mn_create_foodTruck_add_station(IN i_foodTruckName VARCHAR(50), IN i_stationName VARCHAR(50), IN i_managerUsername VARCHAR(50))
+BEGIN
+
     IF i_stationName in (
         SELECT stationName
         FROM station
-        WHERE capacity > 0
-        ) THEN
+    ) AND
+    (SELECT count(foodTruckName)
+    FROM FoodTruck
+    WHERE stationName = i_stationName) < (
+        SELECT capacity
+        FROM station
+        WHERE stationName = i_stationName
+    )
+
+        THEN
         INSERT INTO FoodTruck (foodTruckName, stationName, managerUsername)
         VALUES (i_foodTruckName, i_stationName, i_managerUsername);
-	UPDATE Station
-	SET capacity = capacity - 1
-	WHERE stationName = i_stationName;																    
+
     END IF;
 
 END //
@@ -714,17 +725,21 @@ BEGIN
     IF i_stationName in (
         SELECT stationName
         FROM station
-        WHERE capacity > 0
-    ) AND i_foodTruckName in(
-	SELECT foodTruckName 
+    ) AND (SELECT count(foodTruckName)
+    FROM FoodTruck
+    WHERE stationName = i_stationName) < (
+        SELECT capacity
+        FROM station
+        WHERE stationName = i_stationName
+    )
+    AND i_foodTruckName in(
+	SELECT foodTruckName
 	 FROM foodtruck
 	) THEN
         UPDATE FoodTruck
         SET stationName = i_stationName
         WHERE foodTruckName = i_foodTruckName;
-	UPDATE Station
-	SET capacity = capacity - 1
-	WHERE stationName = i_stationName;											      
+
     END IF;
 END //
 DELIMITER ;
