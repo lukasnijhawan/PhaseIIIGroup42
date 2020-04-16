@@ -713,7 +713,8 @@ BEGIN
 		SELECT foodName 
 		FROM MenuItem
 		WHERE foodTruckName = i_foodTruckName
-	)
+	) AND
+	i_price >= 0														      
     THEN
         INSERT INTO MenuItem(price, foodTruckName, foodName) 
 		VALUES (i_price,i_foodTruckName,i_foodName);
