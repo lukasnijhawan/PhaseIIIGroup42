@@ -1036,7 +1036,7 @@ BEGIN
     SELECT date,
     orderID,
     sum(purchaseQuantity*price),
-    GROUP_CONCAT(orderdetail.foodName),
+    GROUP_CONCAT(DISTINCT orderdetail.foodName),
     sum(purchaseQuantity)
 
     FROM (orderdetail NATURAL JOIN orders) INNER JOIN menuitem ON
