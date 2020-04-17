@@ -893,11 +893,11 @@ BEGIN
     INSERT INTO cus_filter_explore_result
     SELECT Station.stationName, Station.buildingName, GROUP_CONCAT(DISTINCT(FoodTruck.foodTruckName) SEPARATOR ',') AS foodTruckNames, GROUP_CONCAT(DISTINCT(MenuItem.foodName) SEPARATOR ',') AS foodNames
         FROM Station
-        INNER JOIN
+        LEFT JOIN
         FoodTruck ON Station.stationName = FoodTruck.stationName
-        INNER JOIN
+        LEFT JOIN
         MenuItem  ON FoodTruck.foodTruckName = MenuItem.foodTruckName
-        INNER JOIN
+        LEFT JOIN
         BuildingTag ON Station.buildingName  = BuildingTag.buildingName
         WHERE
         (i_buildingName is NULL OR i_buildingName = Station.buildingName OR i_buildingName = '') AND
