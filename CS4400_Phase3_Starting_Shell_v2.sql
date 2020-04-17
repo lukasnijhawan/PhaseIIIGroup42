@@ -1032,20 +1032,24 @@ BEGIN
     -- place your code/solution here
 
     INSERT INTO cus_order_history_result
-
-    SELECT date,
-    orderID,
+   
+  SELECT date,
+    orders.orderID,
     sum(purchaseQuantity*price),
     GROUP_CONCAT(DISTINCT orderdetail.foodName),
     sum(purchaseQuantity)
 
-    FROM (orderdetail NATURAL JOIN orders) INNER JOIN menuitem ON
-    orderdetail.foodTruckName = menuitem.foodTruckName
-    AND
-    orderdetail.foodName = menuitem.foodName
-    WHERE customerUsername = i_customerUsername
-    GROUP BY orderID
-    ;
+	FROM Orders LEFT JOIN OrderDetail
+	ON Orders.OrderID = OrderDetail.OrderID
+	LEFT JOIN MenuItem 
+	ON
+	orderdetail.foodTruckName = menuitem.foodTruckName
+	AND
+	orderdetail.foodName = menuitem.foodName
+
+	WHERE customerUsername = i_customerUsername
+	GROUP BY orderID
+;
 
 
 
